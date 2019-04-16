@@ -23,6 +23,7 @@
         "vue": "^2.5.17"
     },
     "dependencies": {
-        "npm": "^6.9.0"
+        "npm": "^6.9.0",
+        "swagger-express-middleware": "^2.0.2"
     }
 }

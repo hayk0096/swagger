@@ -43,9 +43,10 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script>
         $.ajaxSetup({
-            data: {
-                "_token": "{{ csrf_token() }}"
-            },
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
         });
 
         var cookie_str = document.cookie;
@@ -76,6 +77,9 @@
                 ],
                 data: {
                     "_token": cookie_str
+                },
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 plugins: [
                     SwaggerUIBundle.plugins.DownloadUrl

@@ -6,6 +6,27 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
+/**
+ * @SWG\Definition(
+ *  definition="User",
+ *  @SWG\Property(
+ *      property="id",
+ *      type="integer"
+ *  ),
+ *  @SWG\Property(
+ *      property="name",
+ *      type="string"
+ *  ),
+ *  @SWG\Property(
+ *      property="email",
+ *      type="string"
+ *  ),
+ *  @SWG\Property(
+ *      property="password",
+ *      type="string"
+ *  ),
+ * )
+ */
 class User extends Authenticatable
 {
     use Notifiable;

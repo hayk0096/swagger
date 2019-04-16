@@ -3,6 +3,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Swagger UI</title>
     <link rel="stylesheet" type="text/css" href="./swagger-ui.css" >
     <link rel="icon" type="image/png" href="./favicon-32x32.png" sizes="32x32" />
@@ -42,6 +43,9 @@
         url: "https://petstore.swagger.io/v2/swagger.json",
         dom_id: '#swagger-ui',
         deepLinking: true,
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
         presets: [
           SwaggerUIBundle.presets.apis,
           SwaggerUIStandalonePreset
@@ -50,7 +54,7 @@
           SwaggerUIBundle.plugins.DownloadUrl
         ],
         layout: "StandaloneLayout"
-      })
+      });
       // End Swagger UI call region
 
       window.ui = ui

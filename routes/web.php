@@ -11,6 +11,10 @@
 |
 */
 
+Route::group(['middleware' => 'web'], function () {
+    Route::get('api/documentation', '\L5Swagger\Http\Controllers\SwaggerController@api')->name('l5swagger.api');
+});
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -18,7 +22,3 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
-
-//Route::get('/create', 'Auth\UserController@create');
-
-Route::post('/users/signup', 'Auth\UserController@create');

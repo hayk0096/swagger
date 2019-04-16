@@ -1,41 +1,126 @@
 {
   "openapi": "3.0.0",
-  "title" : "Music API Documentation",
-  "description" : "MUSIC API course for egghead",
-  "license": {
-    "name": "MIT",
-    "url": "https://opensource.org/licenses/MIT"
+  "info": {
+    "version": "1.0.0",
+    "title" : "User Management ",
+    "description" : "Merchant and Normal Customers",
+    "termsOfService": "http://swagger.io/terms",
+    "contact": {
+      "name": "Swagger API team"
+    },
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT",
+      "email": "test@gmail.com"
+    }
   },
-  "version": "1.0.0",
+  "servers": [
+    {
+      "url": "http://localhost:8000/api",
+      "description": "Dev server"
+    },
+    {
+      "url": "https://prod.foo.com/v1",
+      "description": "Prod server"
+    }
+  ],
   "host": "polar-plateau-87434.herokuapp.com",
   "basePath": "/api",
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "consumes": [
+    "application/json",
+    "application/xml",
+    "text/xml",
+    "text/html"
+  ],
+  "produces": [
+    "application/json"
+  ],
   "tags": [
     {
       "name": "Users",
       "description": "API for Users Endpoints"
     }
   ],
-  "schemes": ["http","https"],
-  "consumes": ["application/json"],
-  "produces": ["application/json"],
-  "paths" :{
-    "/users/signup":{
-      "post":{
+  "paths": {
+    "/users": {
+      "get": {
+        "description" : "Obtain information about users",
+        "parameters": [
+          {
+            "name": "bodyLimit",
+            "description": "The amount of users returned",
+            "in": "body",
+            "schema" : {
+              "type": "integer",
+              "minimum": 10,
+              "maximum": 20,
+              "example": 15
+            }
+          },
+          {
+            "name": "pageLimit",
+            "description": "The pages to return users info",
+            "in": "query",
+            "schema" : {
+              "type": "integer",
+              "minimum": 10,
+              "maximum": 20,
+              "example": 15
+            }
+          }
+        ],
+        "responses":{
+          "200": {
+            "description" : "Successful pull of users info",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "properties" : {
+                      "id" : {
+                        "type" : "integer",
+                        "example" : 4
+                      },
+                      "name" : {
+                        "type" : "string",
+                        "example" : "David John"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/signup": {
+      "post": {
         "tags": ["Users"],
         "summary": "API Endpoint for create User",
         "description" : "Create new User in database",
         "parameters":[
           {
             "name": "user",
-            "description": "User params to regitser new user",
+            "description": "User params to register new user",
             "in": "body",
-            "required": "true",
+            "paramType": "form",
+            "required": false,
+            "allowMultiple": false,
             "schema" : {
-              "$ref" : "#definitions/User"
-            }
+              "$ref" : "#/definitions/User"
+            },
+            "dataType": "string"
           }
         ],
-        "produces" : ["application/json"],
+        "produces" : [
+          "application/json"
+        ],
         "responses":{
           "200":{
             "description" : "New user has Created",
@@ -55,10 +140,10 @@
           {
             "name": "user",
             "description": "User params to login",
-            "in": "body",
+            "in": "form",
             "required": "true",
             "schema" : {
-              "$ref" : "#definitions/UserLogin"
+              "$ref" : "#/definitions/UserLogin"
             }
           }
         ],
@@ -67,7 +152,7 @@
           "200":{
             "description" : "New user has loggedIn",
             "schema": {
-              "$ref" : "#definitions/UserLoginRsp"
+              "$ref" : "#/definitions/UserLoginRsp"
             }
           }
         }
@@ -83,13 +168,21 @@
       }
     },
     "User":{
-      "required": ["firstName","lastName", "email", "password"],
+      "required": [
+        "firstName",
+        "lastName",
+        "email",
+        "password"
+      ],
       "properties":{
         "_id": {
-          "type" : "string"
+          "type" : "integer"
         },
         "firstName": {
-          "type" : "string"
+          "type" : "string",
+          "minimum" : 3,
+          "maximum" : 10,
+          "example" : 8
         },
         "lastName": {
           "type" : "string"
