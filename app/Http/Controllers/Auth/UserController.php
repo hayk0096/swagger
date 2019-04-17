@@ -3,63 +3,29 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use http\Env\Response;
+use App\Rules\OffsetLimit;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
+use Validator;
+use App\User;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
     /**
-     * @SWG\Get(
-     *     path="/users",
-     *     summary="Get list of users",
-     *     tags={"Users"},
-     *     @SWG\Response(
-     *         response=200,
-     *         description="successful operation",
-     *         @SWG\Schema(
-     *             type="array",
-     *             @SWG\Items(ref="#/definitions/User")
-     *         ),
-     *     ),
-     *     @SWG\Response(
-     *         response="401",
-     *         description="Unauthorized user",
-     *     ),
-     * )
-     */
-    public function index()
-    {
-        return \response()->json([
-            "description" => "response message",
-            "token" => "token string",
-            "userObject" => [
-                [
-                    "firstName" => "John",
-                    "lastName" => "Lennon",
-                    "age" => 22,
-                    "gender" => "female",
-                    "email" => "lennon@gmail.com"
-                ]
-            ]
-        ], 200);
-    }
-
-
-    /**
      * @SWG\Post(
-     *     path="/create",
+     *     path="/api/users/signup",
      *     description="Return a user's first and last name",
      *     @SWG\Parameter(
-     *         name="firstname",
-     *         name="firstname",
+     *         name="lastName",
      *         in="query",
      *         type="string",
      *         description="Your first name",
      *         required=true,
      *     ),
      *     @SWG\Parameter(
-     *         name="lastname",
-     *         in="query",
+     *         name="lastName",
+     *         in="formData",
      *         type="string",
      *         description="Your last name",
      *         required=true,
@@ -76,53 +42,85 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            "firstName" => "required|min:3|max:15",
+            "lastName" => "required|min:5|max:20",
+            "email" => "required|unique:users|email",
+            "password" => "required|min:6",
+            "password_confirm" => "required|same:password",
+            "phoneNumber" => "required",
+            "billingAddress" => "required",
+            "billingCity" => "required",
+            "billingCountry" => "required",
+            "billingPostalCode" => "required|numeric",
+            "companyName" => "required",
+            "companyVAT" => "required",
+            "userType" => "required"
+        ]);
+
+        if ($validator->fails()){
+            return response()->json([
+                "description" => 'Please check below errors',
+                "errors" => $validator->errors()
+            ], 400);
+        }
+
+        $newUser = User::create([
+            "firstName" => $request->firstName,
+            "lastName" => $request->lastName,
+            "email" => $request->email,
+            "password" => bcrypt($request->password),
+            "phoneNumber" => $request->phoneNumber,
+            "billingAddress" => $request->billingAddress,
+            "billingCity" => $request->billingCity,
+            "billingCountry" => $request->billingCountry,
+            "billingPostalCode" => $request->billingPostalCode,
+            "companyName" => $request->companyName,
+            "companyVAT" => $request->companyVAT,
+            "userType" => $request->userType
+        ]);
+
         return response()->json([
-            "description" => "response message",
+            "description" => "New user '$request->userType' created",
             "token" => "token string",
-            "userObject" => []
+            "userObject" => $newUser
         ], 200);
-//        $userData = $request->only([
-//            'firstname',
-//            'lastname',
-//        ]);
-//        if (empty($userData['firstname']) && empty($userData['lastname'])) {
-//            return new \Exception('Missing data', 404);
-//        }
-//        return $userData['firstname'] . ' ' . $userData['lastname'];
     }
 
-
-    /**
-     * @SWG\Get(
-     *     path="/users/{user_id}",
-     *     summary="Get user by id",
-     *     tags={"Users"},
-     *     description="Get user by id",
-     *     @SWG\Parameter(
-     *         name="user_id",
-     *         in="path",
-     *         description="User id",
-     *         required=true,
-     *         type="integer",
-     *     ),
-     *     @SWG\Response(
-     *         response=200,
-     *         description="successful operation",
-     *         @SWG\Schema(ref="#/definitions/User"),
-     *     ),
-     *     @SWG\Response(
-     *         response="401",
-     *         description="Unauthorized user",
-     *     ),
-     *     @SWG\Response(
-     *         response="404",
-     *         description="User is not found",
-     *     )
-     * )
-     */
-    public function show($user_id)
+    public function login(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            "email" => "required|email",
+            "password" => "required|min:6"
+        ]);
 
+        if ($validator->fails()){
+            return response()->json([
+                "description" => 'Please check below errors',
+                "errors" => $validator->errors()
+            ], 400);
+        }
+
+        $user = User::where('email', $request->email)->get();
+        if ($user == null || count($user) == 0){
+            return response()->json([
+                "description" => 'Please register before sign in'
+            ], 400);
+        }
+
+        if (Auth::guard('web')->attempt(['email' => $request->email,'password' => $request->password], $request->remember)){
+            $token = Str::random(32);
+            User::where('email', $request->email)->update(['access_token' => $token]);
+            return response()->json([
+                "description" => "You are logged in",
+                "token" => $token,
+                "userObject" => $user
+            ], 200);
+        } else {
+            return response()->json([
+                "description" => "Your password was wrong"
+            ], 400);
+        }
     }
 
 }

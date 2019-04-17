@@ -1,4 +1,5 @@
 {
+  "swagger": "3.0",
   "openapi": "3.0.0",
   "info": {
     "version": "1.0.0",
@@ -10,34 +11,14 @@
     },
     "license": {
       "name": "MIT",
-      "url": "https://opensource.org/licenses/MIT",
-      "email": "test@gmail.com"
+      "url": "https://opensource.org/licenses/MIT"
     }
   },
   "servers": [
     {
       "url": "http://localhost:8000/api",
       "description": "Dev server"
-    },
-    {
-      "url": "https://prod.foo.com/v1",
-      "description": "Prod server"
     }
-  ],
-  "host": "polar-plateau-87434.herokuapp.com",
-  "basePath": "/api",
-  "schemes": [
-    "http",
-    "https"
-  ],
-  "consumes": [
-    "application/json",
-    "application/xml",
-    "text/xml",
-    "text/html"
-  ],
-  "produces": [
-    "application/json"
   ],
   "tags": [
     {
@@ -46,114 +27,178 @@
     }
   ],
   "paths": {
-    "/users": {
-      "get": {
-        "description" : "Obtain information about users",
-        "parameters": [
-          {
-            "name": "bodyLimit",
-            "description": "The amount of users returned",
-            "in": "body",
-            "schema" : {
-              "type": "integer",
-              "minimum": 10,
-              "maximum": 20,
-              "example": 15
-            }
-          },
-          {
-            "name": "pageLimit",
-            "description": "The pages to return users info",
-            "in": "query",
-            "schema" : {
-              "type": "integer",
-              "minimum": 10,
-              "maximum": 20,
-              "example": 15
-            }
-          }
-        ],
-        "responses":{
-          "200": {
-            "description" : "Successful pull of users info",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "type" : "array",
-                  "items" : {
-                    "properties" : {
-                      "id" : {
-                        "type" : "integer",
-                        "example" : 4
-                      },
-                      "name" : {
-                        "type" : "string",
-                        "example" : "David John"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/users/signup": {
       "post": {
         "tags": ["Users"],
         "summary": "API Endpoint for create User",
-        "description" : "Create new User in database",
-        "parameters":[
+        "description": "Create new User in database",
+        "parameters": [
           {
-            "name": "user",
-            "description": "User params to register new user",
-            "in": "body",
-            "paramType": "form",
-            "required": false,
-            "allowMultiple": false,
+            "name": "firstName",
+            "required": true,
+            "in": "query",
             "schema" : {
-              "$ref" : "#/definitions/User"
-            },
-            "dataType": "string"
+              "type": "string",
+              "minLength": 3,
+              "maxLength": 15
+            }
+          },
+          {
+            "name": "lastName",
+            "required": true,
+            "in": "query",
+            "schema" : {
+              "type": "string",
+              "minLength": 5,
+              "maxLength": 20
+            }
+          },
+          {
+            "name": "email",
+            "required": true,
+            "in": "query",
+            "schema" : {
+              "type": "string",
+              "maxLength": 30
+            }
+          },
+          {
+            "name": "password",
+            "required": true,
+            "in": "query",
+            "schema" : {
+              "type": "string",
+              "minLength": 5,
+              "maxLength": 20
+            }
+          },
+          {
+            "name": "password_confirm",
+            "required": true,
+            "in": "query",
+            "schema" : {
+              "type": "string",
+              "minLength": 5,
+              "maxLength": 20
+            }
+          },
+          {
+            "name": "phoneNumber",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minLength": 6,
+              "maxLength": 20
+            }
+          },
+          {
+            "name": "userType",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": ["customer", "merchant"],
+              "minLength": 6,
+              "maxLength": 20
+            }
+          },
+          {
+            "name": "billingAddress",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "minLength": 6,
+              "maxLength": 20
+            }
+          },
+          {
+            "name": "billingCity",
+            "required": true,
+            "in": "query",
+            "schema" : {
+              "type": "string",
+              "minLength": 3,
+              "maxLength": 20
+            }
+          },
+          {
+            "name": "billingPostalCode",
+            "required": true,
+            "in": "query",
+            "schema" : {
+              "type": "integer",
+              "minLength": 3,
+              "maxLength": 20
+            }
+          },
+          {
+            "name": "billingCountry",
+            "required": true,
+            "in": "query",
+            "schema" : {
+              "type": "string",
+              "minLength": 3,
+              "maxLength": 20
+            }
+          },
+          {
+            "name": "companyName",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "minLength": 3,
+              "maxLength": 20
+            }
+          },
+          {
+            "name": "companyVAT",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
-        "produces" : [
-          "application/json"
-        ],
-        "responses":{
-          "200":{
-            "description" : "New user has Created",
-            "schema": {
-              "$ref" : "#definitions/SignupRsp"
-            }
+        "schemes": [],
+        "responses": {
+          "200": {
+            "description" : "New user has Created"
           }
         }
       }
     },
-    "/users/login":{
-      "post":{
-        "tags": ["Users"],
-        "summary": "API Endpoint to login his/her account",
-        "description" : "Login user",
-        "parameters":[
+    "/users/login": {
+      "post": {
+        "tags": [ "Users" ],
+        "summary": "API Endpoint for login User",
+        "description": "Sign in User",
+        "parameters": [
           {
-            "name": "user",
-            "description": "User params to login",
-            "in": "form",
-            "required": "true",
+            "name": "email",
+            "required": true,
+            "in": "query",
             "schema" : {
-              "$ref" : "#/definitions/UserLogin"
+              "type": "string",
+              "minLength": 8
+            }
+          },
+          {
+            "name": "password",
+            "required": true,
+            "in": "query",
+            "schema" : {
+              "type": "string",
+              "minLength": 6
             }
           }
         ],
-        "produces" : ["application/json"],
-        "responses":{
-          "200":{
-            "description" : "New user has loggedIn",
-            "schema": {
-              "$ref" : "#/definitions/UserLoginRsp"
-            }
+        "schemes": [],
+        "responses": {
+          "200": {
+            "description" : "User logging"
           }
         }
       }
@@ -172,20 +217,19 @@
         "firstName",
         "lastName",
         "email",
-        "password"
+        "password",
+        "role"
       ],
       "properties":{
-        "_id": {
-          "type" : "integer"
-        },
         "firstName": {
           "type" : "string",
-          "minimum" : 3,
-          "maximum" : 10,
-          "example" : 8
+          "minimum" : 2,
+          "maximum" : 20
         },
         "lastName": {
-          "type" : "string"
+          "type" : "string",
+          "minimum" : 3,
+          "maximum" : 20
         },
         "email": {
           "type" : "string"
@@ -194,7 +238,8 @@
           "type" : "string"
         },
         "role": {
-          "type": "integer"
+          "type": "string",
+          "enum": ["merchant", "customer"]
         }
       }
     },

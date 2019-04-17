@@ -28,6 +28,7 @@ class CreateUsersTable extends Migration
             $table->string('companyName');
             $table->string('companyVAT');
             $table->enum('userType', ['merchant', 'customer']);
+            $table->string('access_token')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
