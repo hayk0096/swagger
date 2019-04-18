@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Rules\OffsetLimit;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Validator;
@@ -82,7 +81,6 @@ class UserController extends Controller
 
         return response()->json([
             "description" => "New user '$request->userType' created",
-            "token" => "token string",
             "userObject" => $newUser
         ], 200);
     }
@@ -111,9 +109,10 @@ class UserController extends Controller
         if (Auth::guard('web')->attempt(['email' => $request->email,'password' => $request->password], $request->remember)){
             $token = Str::random(32);
             User::where('email', $request->email)->update(['access_token' => $token]);
+            $user = User::where('email', $request->email)->first();
             return response()->json([
                 "description" => "You are logged in",
-                "token" => $token,
+                "token" => $user->access_token,
                 "userObject" => $user
             ], 200);
         } else {

@@ -14,12 +14,6 @@
       "url": "https://opensource.org/licenses/MIT"
     }
   },
-  "servers": [
-    {
-      "url": "http://localhost:8000/api",
-      "description": "Dev server"
-    }
-  ],
   "tags": [
     {
       "name": "Users",
@@ -27,7 +21,7 @@
     }
   ],
   "paths": {
-    "/users/signup": {
+    "/api/users/signup": {
       "post": {
         "tags": ["Users"],
         "summary": "API Endpoint for create User",
@@ -170,7 +164,7 @@
         }
       }
     },
-    "/users/login": {
+    "/api/users/login": {
       "post": {
         "tags": [ "Users" ],
         "summary": "API Endpoint for login User",
@@ -200,74 +194,6 @@
           "200": {
             "description" : "User logging"
           }
-        }
-      }
-    }
-  },
-  "definitions":{
-    "SignupRsp":{
-      "properties":{
-        "success": {
-          "type":"boolean"
-        }
-      }
-    },
-    "User":{
-      "required": [
-        "firstName",
-        "lastName",
-        "email",
-        "password",
-        "role"
-      ],
-      "properties":{
-        "firstName": {
-          "type" : "string",
-          "minimum" : 2,
-          "maximum" : 20
-        },
-        "lastName": {
-          "type" : "string",
-          "minimum" : 3,
-          "maximum" : 20
-        },
-        "email": {
-          "type" : "string"
-        },
-        "password": {
-          "type" : "string"
-        },
-        "role": {
-          "type": "string",
-          "enum": ["merchant", "customer"]
-        }
-      }
-    },
-    "UserLogin":{
-      "required": ["email", "password"],
-      "properties":{
-        "email": {
-          "type" : "string"
-        },
-        "password": {
-          "type" : "string"
-        }
-      }
-    },
-    "UserLoginRsp":{
-      "properties":{
-        "token": {
-          "type" : "string"
-        }
-      }
-    },
-    "UserCustomRsp":{
-      "properties":{
-        "firstName" :{
-          "type" :"string"
-        },
-        "lastName" :{
-          "type" :"string"
         }
       }
     }
