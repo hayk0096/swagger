@@ -47,7 +47,7 @@ class UserController extends Controller
             "email" => "required|unique:users|email",
             "password" => "required|min:6",
             "password_confirm" => "required|same:password",
-            "phoneNumber" => "required",
+            "phoneNumber" => "required|max:15",
             "billingAddress" => "required",
             "billingCity" => "required",
             "billingCountry" => "required",

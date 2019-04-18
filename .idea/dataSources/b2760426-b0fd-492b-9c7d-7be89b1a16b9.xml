@@ -1065,7 +1065,7 @@
     </column>
     <column id="262" parent="247" name="phoneNumber">
       <Position>7</Position>
-      <DataType>varchar(191)|0s</DataType>
+      <DataType>int(11)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
@@ -1089,7 +1089,7 @@
     </column>
     <column id="266" parent="247" name="billingPostalCode">
       <Position>11</Position>
-      <DataType>varchar(191)|0s</DataType>
+      <DataType>int(11)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
@@ -1114,7 +1114,6 @@
     <column id="270" parent="247" name="access_token">
       <Position>15</Position>
       <DataType>varchar(191)|0s</DataType>
-      <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
     <column id="271" parent="247" name="remember_token">
